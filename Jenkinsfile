@@ -10,7 +10,7 @@ pipeline {
 
     stages {
         stage('Checkout') {
-             steps {
+            steps {
                 git branch: 'master', url: 'https://github.com/papadiouf13/exam_devops.git'
             }
         }
@@ -30,7 +30,11 @@ pipeline {
 
         stage('Docker Login') {
             steps {
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                        sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+                    }
+                }
             }
         }
 
@@ -52,7 +56,9 @@ pipeline {
 
     post {
         always {
-            sh 'docker logout'
+            node {
+                sh 'docker logout'
+            }
         }
     }
 }
