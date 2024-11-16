@@ -4,14 +4,14 @@ pipeline {
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub')
         APP_NAME = "exam_devops"
-        DOCKER_IMAGE = "lunarvortex/${APP_NAME}"
+        DOCKER_IMAGE = "diouf173/${APP_NAME}"
         DOCKER_TAG = "${BUILD_NUMBER}"
     }
 
     stages {
         stage('Checkout') {
-            steps {
-                checkout scm
+             steps {
+                git branch: 'master', url: 'https://github.com/papadiouf13/exam_devops.git'
             }
         }
 
